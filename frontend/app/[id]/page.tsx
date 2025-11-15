@@ -5,6 +5,8 @@ import styles from "./page.module.css";
 import { use, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Assignment } from "@/types/database";
+import { getPrScore } from "@/lib/getPrScore";
+import { get } from "http";
 
 export default function TaskDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -33,8 +35,9 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
 
   const handleSubmit = async () => {
     if (!prUrl) {
-      alert("PRリンクを入力してください");
-      return;
+    //   alert("PRリンクを入力してください");
+    getPrScore(prUrl);
+    return;
     }
 
     const { data: { user } } = await supabase.auth.getUser();
