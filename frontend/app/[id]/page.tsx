@@ -5,7 +5,6 @@ import styles from "./page.module.css";
 import { use, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Assignment } from "@/types/database";
-import { getPrScore } from "@/lib/getPrScore";
 
 export default function TaskDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -111,7 +110,6 @@ AI スコア: ${aiScore}点 (重み: 40%)
           alert(`提出エラー: ${error.message}`);
         }
       } else {
-        alert("PRが送信されました！");
         setPrUrl("");
       }
     } catch (error) {
