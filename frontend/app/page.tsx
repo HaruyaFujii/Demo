@@ -33,22 +33,25 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>PR評価システム</h1>
-        <p className={styles.subtitle}>課題一覧</p>
+        <h1 className={styles.title}>課題一覧</h1>
+        {/* <p className={styles.subtitle}></p> */}
       </header>
 
       <main className={styles.main}>
         <div className={styles.taskGrid}>
           {tasks.map((task) => (
             <div key={task.id} className={styles.taskCard}>
-              <h2 className={styles.taskTitle}>
-                課題 {task.id}: {task.title}
-              </h2>
-              <p className={styles.taskDescription}>{task.description}</p>
+              <div className={styles.taskContent}>
+                <h2 className={styles.taskTitle}>
+                  課題 {task.id}: {task.title}
+                </h2>
+                <p className={styles.taskDescription}>{task.description}</p>
+              </div>
               <Link href={`/${task.id}`} className={styles.detailButton}>
                 詳細を見る
               </Link>
             </div>
+
           ))}
         </div>
       </main>

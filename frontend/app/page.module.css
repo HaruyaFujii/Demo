@@ -1,8 +1,10 @@
 .container {
   min-height: 100vh;
   padding: 2rem;
-  background: var(--background);
-  color: var(--foreground);
+  background: linear-gradient(120deg, #f0f4ff, #e8ebf6);
+  color: #1c1c1c;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .header {
@@ -12,15 +14,18 @@
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 2.75rem;
+  font-weight: 800;
   margin-bottom: 0.5rem;
-  color: var(--foreground);
+  color: #1c1c1c;
+  background: linear-gradient(90deg, #4a90e2, #357abd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
   font-size: 1.25rem;
-  color: #666;
+  color: #555;
   font-weight: 500;
 }
 
@@ -31,68 +36,92 @@
 
 .taskGrid {
   display: grid;
-  grid-template-columns: 1fr; /* 横に1列だけ */
-  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
 }
 
 .taskCard {
-  background: var(--background);
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border: none;
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s ease;
 }
 
 .taskCard:hover {
-  border-color: #4a90e2;
-  box-shadow: 0 4px 16px rgba(74, 144, 226, 0.15);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(74, 144, 226, 0.25);
+}
+
+.taskContent {
+  max-width: 80%;
 }
 
 .taskTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: var(--foreground);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1c1c1c;
 }
 
 .taskDescription {
   font-size: 1rem;
-  color: #666;
+  color: #555;
   line-height: 1.6;
-  margin-bottom: 1.25rem;
 }
 
 .detailButton {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background: #4a90e2;
+  padding: 0.75rem 1.75rem;
+  background: linear-gradient(135deg, #4a90e2, #357abd);
   color: white;
   text-decoration: none;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: background 0.3s ease;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 .detailButton:hover {
-  background: #357abd;
+  background: linear-gradient(135deg, #357abd, #245a8d);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
+/* ダークモード対応 */
 @media (prefers-color-scheme: dark) {
-  .subtitle {
-    color: #aaa;
+  .container {
+    background: linear-gradient(120deg, #1e1e1e, #2c2c2c);
+    color: #eee;
   }
 
   .taskCard {
-    border-color: #333;
+    background: #2c2c2c;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
   }
 
   .taskCard:hover {
-    border-color: #4a90e2;
+    box-shadow: 0 12px 28px rgba(74, 144, 226, 0.4);
+  }
+
+  .taskTitle {
+    color: #fff;
   }
 
   .taskDescription {
-    color: #aaa;
+    color: #ccc;
+  }
+
+  .detailButton {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .detailButton:hover {
+    background: linear-gradient(135deg, #357abd, #245a8d);
   }
 }
