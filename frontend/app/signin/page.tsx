@@ -18,11 +18,10 @@ export default function SignInPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    // すでにログインしている場合はホームにリダイレクト
     const checkUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        router.push("/");
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.replace("/");
       } else {
         setLoading(false);
       }
@@ -31,12 +30,21 @@ export default function SignInPage() {
   }, [router]);
 
   const handleGitHubLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "github",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
 
-    if (error) {
-      alert(`ログインエラー: ${error.message}`);
+      if (error) {
+        console.error("GitHub login error:", error);
+        alert(`ログインエラー: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      alert("予期しないエラーが発生しました");
     }
   };
 
@@ -46,14 +54,23 @@ export default function SignInPage() {
       return;
     }
 
+    if (authMode === "signup" && password.length < 6) {
+      alert("パスワードは6文字以上で入力してください");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       if (authMode === "signup") {
-        // サインアップ
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              user_type: userType,
+            },
+          },
         });
 
         if (error) {
@@ -75,23 +92,33 @@ export default function SignInPage() {
             console.error("プロフィール作成エラー:", profileError);
           }
 
-          alert("確認メールを送信しました。メールを確認してください。");
+          // メール確認が必要な場合
+          if (data.session === null) {
+            alert("確認メールを送信しました。メールを確認してアカウントを有効化してください。");
+          } else {
+            alert("アカウントが作成されました！");
+            router.push("/");
+          }
         }
       } else {
         // サインイン
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
         if (error) {
+          console.error("Login error:", error);
           alert(`ログインエラー: ${error.message}`);
           return;
         }
 
-        router.push("/");
+        if (data.session) {
+          router.push("/");
+        }
       }
     } catch (error) {
+      console.error("Auth error:", error);
       alert(`エラー: ${error instanceof Error ? error.message : "不明なエラー"}`);
     } finally {
       setIsSubmitting(false);
@@ -135,6 +162,7 @@ export default function SignInPage() {
             placeholder="メールアドレス"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()}
           />
           <input
             type="password"
@@ -142,6 +170,7 @@ export default function SignInPage() {
             placeholder="パスワード"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()}
           />
 
           {/* ユーザータイプ選択（サインアップ時のみ） */}

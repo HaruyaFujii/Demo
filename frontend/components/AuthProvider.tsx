@@ -11,10 +11,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       
-      // サインインページ以外でログインしていない場合はリダイレクト
-      if (!data.session && pathname !== "/signin" && !pathname.startsWith("/auth")) {
+      // 認証不要なページ
+      const publicPaths = ["/signin", "/auth/callback"];
+      const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
+      
+      if (!session && !isPublicPath) {
         router.push("/signin");
       }
       
@@ -22,15 +25,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     checkAuth();
+  }, []); // 初回マウント時のみ実行
 
+  useEffect(() => {
     // 認証状態の変更を監視
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (event === "SIGNED_IN" && session) {
-          if (pathname === "/signin") {
-            router.push("/");
-          }
-        } else if (event === "SIGNED_OUT") {
+        console.log("Auth event:", event, "Session:", !!session);
+        
+        const publicPaths = ["/signin", "/auth/callback"];
+        const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
+        
+        if (event === "SIGNED_IN" && isPublicPath) {
+          router.push("/");
+          router.refresh();
+        } else if (event === "SIGNED_OUT" && !isPublicPath) {
           router.push("/signin");
         }
       }

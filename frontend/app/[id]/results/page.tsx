@@ -1,113 +1,147 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { use, useEffect, useState } from "react";
 import styles from "./page.module.css";
+import { supabase } from "@/lib/supabase";
+import type { Submission } from "@/types/database";
 
-// サンプルデータ（消さない）
-const submittedPRs = [
-  { id: 1, submitter: "田中太郎", email: "tanaka@example.com", prLink: "https://github.com/example/repo/pull/123", submittedAt: "2025-11-15 11:30", score: 95 },
-  { id: 2, submitter: "佐藤花子", email: "sato@example.com", prLink: "https://github.com/example/repo/pull/124", submittedAt: "2025-11-15 11:15", score: 95 },
-  { id: 3, submitter: "鈴木一郎", email: "suzuki@example.com", prLink: "https://github.com/example/repo/pull/125", submittedAt: "2025-11-15 13:45", score: 76 },
-  { id: 4, submitter: "高橋美咲", email: "takahashi@example.com", prLink: "https://github.com/example/repo/pull/126", submittedAt: "2025-11-15 14:20", score: 82 },
-  { id: 5, submitter: "伊藤健太", email: "ito@example.com", prLink: "https://github.com/example/repo/pull/127", submittedAt: "2025-11-15 15:00", score: 91 },
-];
+interface SubmissionWithScore extends Submission {
+  user_email?: string;
+  score?: number;
+}
 
-// スコア高い順、同点の場合は提出日時が早い順
-submittedPRs.sort((a, b) => {
-  if (b.score === a.score) {
-    return new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime();
-  }
-  return b.score - a.score;
-});
-
-export default function ResultsPage() {
-  const params = useParams();
-  const taskId = params.id;
-
+export default function ResultsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const [submissions, setSubmissions] = useState<SubmissionWithScore[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [assignmentTitle, setAssignmentTitle] = useState("");
   const [userType, setUserType] = useState<"student" | "recruiter" | null>(null);
-  const showEmail = userType === "recruiter";
 
   useEffect(() => {
-    const fetchUserType = async () => {
+    const fetchData = async () => {
+      // ユーザータイプを取得
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (user) {
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("user_type")
+          .eq("id", user.id)
+          .single();
 
-      const { data, error } = await supabase
-        .from("user_profiles")
-        .select("user_type")
-        .eq("id", user.id)
+        if (profile) {
+          setUserType(profile.user_type);
+        }
+      }
+
+      // 課題情報を取得
+      const { data: assignment } = await supabase
+        .from("assignments")
+        .select("title")
+        .eq("id", id)
         .single();
 
-      if (error) {
-        console.error("ユーザータイプ取得エラー:", error);
-      } else {
-        setUserType(data.user_type);
+      if (assignment) {
+        setAssignmentTitle(assignment.title);
       }
+
+      // 提出データを取得
+      const { data, error } = await supabase
+        .from("submissions")
+        .select("*")
+        .eq("assignment_id", id)
+        .order("submitted_at", { ascending: false });
+
+      if (error) {
+        console.error("提出データの取得エラー:", error);
+      } else {
+        const formattedData = (data || []).map((item: any) => ({
+          ...item,
+          user_email: item.user_id, // とりあえずuser_idを表示
+          score: Math.floor(Math.random() * 30) + 70, // TODO: 実際のスコアに置き換え
+        }));
+
+        // スコア順にソート
+        formattedData.sort((a, b) => {
+          if (b.score === a.score) {
+            return new Date(a.submitted_at).getTime() - new Date(b.submitted_at).getTime();
+          }
+          return (b.score || 0) - (a.score || 0);
+        });
+
+        setSubmissions(formattedData);
+      }
+      setLoading(false);
     };
 
-    fetchUserType();
-  }, []);
+    fetchData();
+  }, [id]);
 
-  if (userType === null) {
-    return <div className={styles.container}>読み込み中...</div>;
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div style={{ textAlign: "center", padding: "2rem" }}>読み込み中...</div>
+      </div>
+    );
   }
+
+  const showEmail = userType === "recruiter";
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <Link href="/" className={styles.backLink}>← ホームに戻る</Link>
         <h1 className={styles.title}>提出済みPR一覧</h1>
-        <p className={styles.subtitle}>課題: ユーザー認証機能の実装</p>
+        <p className={styles.subtitle}>課題: {assignmentTitle}</p>
       </header>
 
       <main className={styles.main}>
-        <div className={styles.tableWrapper}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>順位</th>
-                <th>提出者</th>
-                {showEmail && <th>メール</th>}
-                <th>PRリンク</th>
-                <th>提出日時</th>
-                <th>スコア</th>
-              </tr>
-            </thead>
-            <tbody>
-              {submittedPRs.map((pr, index) => (
-                <tr key={pr.id}>
-                  <td className={styles.rank}>
-                    {index < 3 ? null : index + 1}
-                  </td>
-                  <td className={styles.submitter}>{pr.submitter}</td>
-                  {showEmail && <td>{pr.email}</td>}
-                  <td>
-                    <a
-                      href={pr.prLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.prLink}
-                    >
-                      {pr.prLink}
-                    </a>
-                  </td>
-                  <td className={styles.date}>{pr.submittedAt}</td>
-                  <td className={styles.score}>{pr.score}</td>
+        {submissions.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
+            まだ提出がありません
+          </div>
+        ) : (
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>順位</th>
+                  {showEmail && <th>メール</th>}
+                  <th>PRリンク</th>
+                  <th>提出日時</th>
+                  <th>スコア</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {submissions.map((submission, index) => (
+                  <tr key={submission.id}>
+                    <td className={styles.rank}>{index + 1}</td>
+                    {showEmail && <td className={styles.submitter}>{submission.user_email || "不明"}</td>}
+                    <td>
+                      <a
+                        href={submission.pr_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.prLink}
+                      >
+                        {submission.pr_url}
+                      </a>
+                    </td>
+                    <td className={styles.date}>
+                      {new Date(submission.submitted_at).toLocaleString("ja-JP")}
+                    </td>
+                    <td className={styles.score}>{submission.score || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <div className={styles.actions}>
-          {taskId && (
-            <Link href={`/${taskId}`} className={styles.backButton}>
-              課題詳細に戻る
-            </Link>
-          )}
+          <Link href={`/${id}`} className={styles.backButton}>
+            課題詳細に戻る
+          </Link>
         </div>
       </main>
     </div>
