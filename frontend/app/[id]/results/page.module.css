@@ -254,6 +254,25 @@ tbody tr:nth-child(3) .rank::after {
   top: -1px;
 }
 
+/* ==== 詳細リンク ==== */
+.detailLink {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.detailLink:hover {
+  background: linear-gradient(135deg, #357abd, #245a8d);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
 /* ==== フッター ==== */
 .actions {
   text-align: center;

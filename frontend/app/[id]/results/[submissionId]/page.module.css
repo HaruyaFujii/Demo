@@ -1,0 +1,366 @@
+/* ==== ベース ==== */
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(120deg, #f0f4ff, #e8ebf6);
+  color: #1c1c1c;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.25rem;
+  color: #666;
+}
+
+/* ==== ヘッダー ==== */
+.header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.backLink {
+  display: inline-block;
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.backLink:hover {
+  color: #357abd;
+  transform: translateX(-4px);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #4a90e2, #357abd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  margin-top: 0.5rem;
+}
+
+/* ==== メイン ==== */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ==== カード ==== */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(74, 144, 226, 0.15);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1c1c1c;
+  border-bottom: 2px solid #4a90e2;
+  padding-bottom: 0.5rem;
+}
+
+/* ==== 基本情報 ==== */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1c1c1c;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.prLink {
+  color: #4a90e2;
+  text-decoration: none;
+  font-family: monospace;
+  font-size: 0.95rem;
+  word-break: break-all;
+  transition: color 0.3s ease;
+}
+
+.prLink:hover {
+  color: #357abd;
+  text-decoration: underline;
+}
+
+/* ==== スコアカード ==== */
+.scoreGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.scoreCard {
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  color: white;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.scoreCard:hover {
+  transform: translateY(-4px);
+}
+
+.scoreLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.scoreValue {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.scoreUnit {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+.scoreDescription {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+/* ==== 詳細スコア ==== */
+.detailScoreGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.detailScoreItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detailScoreHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detailScoreLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1c1c1c;
+}
+
+.detailScoreValue {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #4a90e2;
+}
+
+.progressBar {
+  width: 100%;
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a90e2, #357abd);
+  transition: width 0.5s ease;
+  border-radius: 6px;
+}
+
+/* ==== フィードバック ==== */
+.feedbackSection {
+  margin-bottom: 2rem;
+}
+
+.feedbackSection:last-child {
+  margin-bottom: 0;
+}
+
+.feedbackTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.iconGood {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #4caf50;
+  color: white;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.iconWarning {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #ff9800;
+  color: white;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.iconError {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #f44336;
+  color: white;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.feedbackList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feedbackItem {
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: #f5f5f5;
+  border-left: 4px solid #4a90e2;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.feedbackItem:last-child {
+  margin-bottom: 0;
+}
+
+/* ==== アクション ==== */
+.actions {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.backButton {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background: linear-gradient(135deg, #357abd, #245a8d);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* ==== ダークモード ==== */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: linear-gradient(120deg, #1e1e1e, #2c2c2c);
+    color: #eee;
+  }
+
+  .card {
+    background: #2c2c2c;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  }
+
+  .card:hover {
+    box-shadow: 0 12px 28px rgba(74, 144, 226, 0.4);
+  }
+
+  .sectionTitle {
+    color: #fff;
+  }
+
+  .value {
+    color: #eee;
+  }
+
+  .label {
+    color: #aaa;
+  }
+
+  .subtitle {
+    color: #aaa;
+  }
+
+  .detailScoreLabel {
+    color: #eee;
+  }
+
+  .feedbackItem {
+    background: #1a1a1a;
+    color: #ccc;
+  }
+}

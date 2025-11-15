@@ -170,6 +170,7 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
                   <th>総合スコア</th>
                   <th>CIスコア</th>
                   <th>AIスコア</th>
+                  <th>詳細</th>
                 </tr>
               </thead>
               <tbody>
@@ -206,6 +207,14 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
                     <td className={styles.score}>{submission.total_score !== undefined ? submission.total_score : "-"}</td>
                     <td className={styles.score}>{submission.ci_score !== undefined ? submission.ci_score : "-"}</td>
                     <td className={styles.score}>{submission.ai_score !== undefined ? submission.ai_score : "-"}</td>
+                    <td>
+                      <Link 
+                        href={`/${id}/results/${submission.id}`}
+                        className={styles.detailLink}
+                      >
+                        詳細
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>
