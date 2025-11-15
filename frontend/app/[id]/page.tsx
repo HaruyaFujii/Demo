@@ -6,7 +6,6 @@ import { use, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Assignment } from "@/types/database";
 import { getPrScore } from "@/lib/getPrScore";
-import { get } from "http";
 
 export default function TaskDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -35,36 +34,38 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
 
   const handleSubmit = async () => {
     if (!prUrl) {
-    //   alert("PRリンクを入力してください");
-    getPrScore(prUrl);
-    return;
-    }
-
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      alert("ログインが必要です");
+      alert("PRリンクを入力してください");
       return;
     }
 
-    const { error } = await supabase
-      .from("submissions")
-      .insert({
-        assignment_id: id,
-        user_id: user.id,
-        pr_url: prUrl,
-        status: "submitted",
-      });
+    try {
+      // スコアを取得
+      const score = await getPrScore(prUrl);
+      alert(`スコア: ${score}点`);
 
-    if (error) {
-      if (error.code === "23505") {
-        alert("すでにこの課題にPRを提出済みです");
+
+
+      const { error } = await supabase
+        .from("submissions")
+        .insert({
+          assignment_id: id,
+          user_id: 1, // 仮のユーザーID
+          pr_url: prUrl,
+          status: "submitted",
+        });
+
+      if (error) {
+        if (error.code === "23505") {
+          alert("すでにこの課題にPRを提出済みです");
+        } else {
+          alert(`提出エラー: ${error.message}`);
+        }
       } else {
-        alert(`提出エラー: ${error.message}`);
+        alert("PRが送信されました！");
+        setPrUrl("");
       }
-    } else {
-      alert("PRが送信されました！");
-      setPrUrl("");
+    } catch (error) {
+      alert(`エラー: ${error instanceof Error ? error.message : '不明なエラー'}`);
     }
   };
 
