@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 
 const tasks = [
   {
-    id: 1,
+    id: "c3369d19-3063-424c-a9d8-36d6cef94c02",
     title: "ユーザー認証機能の実装",
     description: "ログイン・ログアウト機能を実装してください",
   },
