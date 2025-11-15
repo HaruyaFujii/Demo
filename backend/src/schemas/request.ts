@@ -9,3 +9,7 @@
 export interface CheckPRRequest {
   prUrl: string;  // 例: https://github.com/owner/repo/pull/123
 }
+
+export interface EvaluateCodeRequest {
+  prUrl: string;
+}
