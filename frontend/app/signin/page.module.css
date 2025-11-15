@@ -20,15 +20,163 @@
   padding: 3rem 2.5rem;
   max-width: 450px;
   width: 100%;
-  text-align: center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .title {
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   color: var(--foreground);
+  text-align: center;
+}
+
+.tabContainer {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.tab:hover {
+  color: var(--foreground);
+}
+
+.tabActive {
+  color: #4a90e2;
+  font-weight: 600;
+}
+
+.tabActive::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #4a90e2;
+}
+
+.formSection {
+  margin-bottom: 2rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background: var(--background);
+  color: var(--foreground);
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.userTypeSection {
+  margin-bottom: 1.5rem;
+}
+
+.userTypeLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--foreground);
+}
+
+.userTypeButtons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.userTypeButton {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  background: var(--background);
+  color: var(--foreground);
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.userTypeButton:hover {
+  border-color: #4a90e2;
+}
+
+.userTypeButtonActive {
+  background: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #357abd;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.divider {
+  text-align: center;
+  color: #666;
+  font-size: 0.875rem;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
 }
 
 .description {
@@ -73,6 +221,43 @@
 
   .description {
     color: #aaa;
+  }
+
+  .tabContainer {
+    border-bottom-color: #333;
+  }
+
+  .tab {
+    color: #aaa;
+  }
+
+  .tab:hover {
+    color: var(--foreground);
+  }
+
+  .input {
+    border-color: #333;
+  }
+
+  .input:focus {
+    border-color: #4a90e2;
+  }
+
+  .userTypeButton {
+    border-color: #333;
+  }
+
+  .userTypeButton:hover {
+    border-color: #4a90e2;
+  }
+
+  .divider {
+    color: #aaa;
+  }
+
+  .divider::before,
+  .divider::after {
+    background: #333;
   }
 
   .githubButton {

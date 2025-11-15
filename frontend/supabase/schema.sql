@@ -8,6 +8,15 @@ CREATE TABLE assignments (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- User Profiles (ユーザープロフィール) テーブル
+CREATE TABLE user_profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  user_type TEXT NOT NULL CHECK (user_type IN ('student', 'recruiter')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
 -- Submissions (提出) テーブル
 CREATE TABLE submissions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -22,6 +31,7 @@ CREATE TABLE submissions (
 
 -- Row Level Security (RLS) を有効化
 ALTER TABLE assignments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
 
 -- Assignments のポリシー: 誰でも読める
@@ -33,6 +43,21 @@ CREATE POLICY "Anyone can view assignments"
 CREATE POLICY "Authenticated users can insert assignments"
   ON assignments FOR INSERT
   WITH CHECK (auth.role() = 'authenticated');
+
+-- User Profiles のポリシー: 誰でも読める
+CREATE POLICY "Anyone can view user profiles"
+  ON user_profiles FOR SELECT
+  USING (true);
+
+-- User Profiles のポリシー: 認証済みユーザーは自分のプロフィールを作成可能
+CREATE POLICY "Users can insert their own profile"
+  ON user_profiles FOR INSERT
+  WITH CHECK (auth.uid() = id);
+
+-- User Profiles のポリシー: 認証済みユーザーは自分のプロフィールを更新可能
+CREATE POLICY "Users can update their own profile"
+  ON user_profiles FOR UPDATE
+  USING (auth.uid() = id);
 
 -- Submissions のポリシー: 誰でも読める
 CREATE POLICY "Anyone can view submissions"
@@ -60,6 +85,10 @@ $$ language 'plpgsql';
 
 -- Assignments テーブルのトリガー
 CREATE TRIGGER update_assignments_updated_at BEFORE UPDATE ON assignments
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- User Profiles テーブルのトリガー
+CREATE TRIGGER update_user_profiles_updated_at BEFORE UPDATE ON user_profiles
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Submissions テーブルのトリガー

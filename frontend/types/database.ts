@@ -7,6 +7,14 @@ export interface Assignment {
   updated_at: string;
 }
 
+export interface UserProfile {
+  id: string;
+  email: string;
+  user_type: 'student' | 'recruiter';
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Submission {
   id: string;
   assignment_id: string;

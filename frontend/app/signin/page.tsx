@@ -5,9 +5,17 @@ import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+type AuthMode = "signin" | "signup";
+type UserType = "student" | "recruiter";
+
 export default function SignInPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [authMode, setAuthMode] = useState<AuthMode>("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState<UserType>("student");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     // すでにログインしている場合はホームにリダイレクト
@@ -32,6 +40,64 @@ export default function SignInPage() {
     }
   };
 
+  const handleEmailAuth = async () => {
+    if (!email || !password) {
+      alert("メールアドレスとパスワードを入力してください");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      if (authMode === "signup") {
+        // サインアップ
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        if (error) {
+          alert(`サインアップエラー: ${error.message}`);
+          return;
+        }
+
+        if (data.user) {
+          // ユーザープロフィールを作成
+          const { error: profileError } = await supabase
+            .from("user_profiles")
+            .insert({
+              id: data.user.id,
+              email: email,
+              user_type: userType,
+            });
+
+          if (profileError) {
+            console.error("プロフィール作成エラー:", profileError);
+          }
+
+          alert("確認メールを送信しました。メールを確認してください。");
+        }
+      } else {
+        // サインイン
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          alert(`ログインエラー: ${error.message}`);
+          return;
+        }
+
+        router.push("/");
+      }
+    } catch (error) {
+      alert(`エラー: ${error instanceof Error ? error.message : "不明なエラー"}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className={styles.container}>
@@ -44,10 +110,83 @@ export default function SignInPage() {
     <div className={styles.container}>
       <div className={styles.card}>
         <h1 className={styles.title}>PR評価システム</h1>
-        <p className={styles.description}>
-          GitHubアカウントでログインしてください
-        </p>
+        
+        {/* タブ切り替え */}
+        <div className={styles.tabContainer}>
+          <button
+            className={`${styles.tab} ${authMode === "signin" ? styles.tabActive : ""}`}
+            onClick={() => setAuthMode("signin")}
+          >
+            ログイン
+          </button>
+          <button
+            className={`${styles.tab} ${authMode === "signup" ? styles.tabActive : ""}`}
+            onClick={() => setAuthMode("signup")}
+          >
+            新規登録
+          </button>
+        </div>
 
+        {/* メール認証フォーム */}
+        <div className={styles.formSection}>
+          <input
+            type="email"
+            className={styles.input}
+            placeholder="メールアドレス"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            className={styles.input}
+            placeholder="パスワード"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {/* ユーザータイプ選択（サインアップ時のみ） */}
+          {authMode === "signup" && (
+            <div className={styles.userTypeSection}>
+              <label className={styles.userTypeLabel}>アカウントタイプ</label>
+              <div className={styles.userTypeButtons}>
+                <button
+                  type="button"
+                  className={`${styles.userTypeButton} ${
+                    userType === "student" ? styles.userTypeButtonActive : ""
+                  }`}
+                  onClick={() => setUserType("student")}
+                >
+                  学生
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.userTypeButton} ${
+                    userType === "recruiter" ? styles.userTypeButtonActive : ""
+                  }`}
+                  onClick={() => setUserType("recruiter")}
+                >
+                  採用担当者
+                </button>
+              </div>
+            </div>
+          )}
+
+          <button
+            onClick={handleEmailAuth}
+            className={styles.submitButton}
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? "処理中..."
+              : authMode === "signin"
+              ? "ログイン"
+              : "新規登録"}
+          </button>
+        </div>
+
+        <div className={styles.divider}>または</div>
+
+        {/* GitHub認証 */}
         <button onClick={handleGitHubLogin} className={styles.githubButton}>
           <svg
             className={styles.githubIcon}
