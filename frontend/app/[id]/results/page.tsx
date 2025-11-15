@@ -55,18 +55,26 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
       if (error) {
         console.error("提出データの取得エラー:", error);
       } else {
-        const formattedData = (data || []).map((item: any) => {
+        // 各提出に対してユーザー情報を取得
+        const formattedData = await Promise.all((data || []).map(async (item: any) => {
           // 総合スコアを計算 (CI:AI = 6:4)
           const ciScore = item.ci_score || 0;
           const aiScore = item.ai_score || 0;
           const totalScore = Math.round(ciScore * 0.6 + aiScore * 0.4);
           
+          // user_profilesからメールアドレスを取得
+          const { data: userProfile } = await supabase
+            .from("user_profiles")
+            .select("email")
+            .eq("id", item.user_id)
+            .single();
+          
           return {
             ...item,
-            user_email: item.user_id, // とりあえずuser_idを表示
+            user_email: userProfile?.email || "不明",
             total_score: totalScore,
           };
-        });
+        }));
 
         // 総合スコア順にソート
         formattedData.sort((a, b) => {
