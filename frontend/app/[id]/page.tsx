@@ -11,6 +11,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
   const { id } = use(params);
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [prUrl, setPrUrl] = useState("");
 
   useEffect(() => {
@@ -38,18 +39,61 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
       return;
     }
 
+    setSubmitting(true);
     try {
-      // スコアを取得
-      const score = await getPrScore(prUrl);
-      alert(`スコア: ${score}点`);
+      // CI結果を取得
+      const ciRes = await fetch('http://localhost:3001/api/pr/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prUrl }),
+      });
 
+      if (!ciRes.ok) {
+        const text = await ciRes.text();
+        throw new Error(`CI check failed: ${ciRes.status} ${text}`);
+      }
 
+      const ciData = await ciRes.json();
+      const ciScore = ciData.ciTotal > 0 ? Math.round((ciData.ciPassed / ciData.ciTotal) * 100) : 0;
+
+      // AI評価を取得
+      const aiRes = await fetch('http://localhost:3001/api/pr/evaluate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prUrl }),
+      });
+
+      if (!aiRes.ok) {
+        const text = await aiRes.text();
+        throw new Error(`AI evaluation failed: ${aiRes.status} ${text}`);
+      }
+
+      const aiData = await aiRes.json();
+      const aiScore = aiData.overallScore;
+
+      // 総合スコアを計算 (CI:AI = 6:4)
+      const totalScore = Math.round(ciScore * 0.6 + aiScore * 0.4);
+
+      alert(`【評価結果】
+CI スコア: ${ciScore}点 (重み: 60%)
+AI スコア: ${aiScore}点 (重み: 40%)
+総合スコア: ${totalScore}点`);
+
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
+        alert("ログインが必要です");
+        return;
+      }
 
       const { error } = await supabase
         .from("submissions")
         .insert({
           assignment_id: id,
-          user_id: 1, // 仮のユーザーID
+          user_id: userData.user.id,
           pr_url: prUrl,
           status: "submitted",
         });
@@ -66,6 +110,8 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
       }
     } catch (error) {
       alert(`エラー: ${error instanceof Error ? error.message : '不明なエラー'}`);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -132,8 +178,15 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
             />
           </div>
 
-          <button onClick={handleSubmit} className={styles.submitButton}>
-            PRを送信する
+          <button onClick={handleSubmit} className={styles.submitButton} disabled={submitting}>
+            {submitting ? (
+              <span className={styles.buttonContent}>
+                <span className={styles.spinner}></span>
+                評価中...
+              </span>
+            ) : (
+              "PRを送信する"
+            )}
           </button>
 
           <Link href={`/${id}/results`} className={styles.resultsLink}>
