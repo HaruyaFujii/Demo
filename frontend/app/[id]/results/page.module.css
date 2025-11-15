@@ -1,0 +1,196 @@
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+}
+
+.backLink {
+  display: inline-block;
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: color 0.3s ease;
+}
+
+.backLink:hover {
+  color: #357abd;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: #666;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tableWrapper {
+  background: var(--background);
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: #f5f5f5;
+}
+
+.table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  color: var(--foreground);
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table td {
+  padding: 1rem;
+  font-size: 0.95rem;
+  color: var(--foreground);
+}
+
+.submitter {
+  font-weight: 500;
+}
+
+.prLink {
+  color: #4a90e2;
+  text-decoration: none;
+  font-family: monospace;
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.prLink:hover {
+  color: #357abd;
+  text-decoration: underline;
+}
+
+.date {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  font-size: 0.813rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.statusSubmitted {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.statusReviewing {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.statusApproved {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.actions {
+  text-align: center;
+}
+
+.backButton {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: var(--background);
+  color: #4a90e2;
+  text-decoration: none;
+  border: 2px solid #4a90e2;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background: #4a90e2;
+  color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  .subtitle,
+  .date {
+    color: #aaa;
+  }
+
+  .tableWrapper {
+    border-color: #333;
+  }
+
+  .table thead {
+    background: #1a1a1a;
+  }
+
+  .table th {
+    border-bottom-color: #333;
+  }
+
+  .table tbody tr {
+    border-bottom-color: #333;
+  }
+
+  .table tbody tr:hover {
+    background: #1a1a1a;
+  }
+
+  .statusSubmitted {
+    background: #0d47a1;
+    color: #90caf9;
+  }
+
+  .statusReviewing {
+    background: #e65100;
+    color: #ffcc80;
+  }
+
+  .statusApproved {
+    background: #1b5e20;
+    color: #a5d6a7;
+  }
+}

@@ -1,0 +1,191 @@
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.header {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+}
+
+.backLink {
+  display: inline-block;
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: color 0.3s ease;
+}
+
+.backLink:hover {
+  color: #357abd;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.taskInfo {
+  background: var(--background);
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.taskTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--foreground);
+}
+
+.taskDescription {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.taskDescription ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.taskDescription li {
+  margin-bottom: 0.5rem;
+}
+
+.linkSection {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.githubLink {
+  display: inline-block;
+  color: #4a90e2;
+  text-decoration: none;
+  font-family: monospace;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background: #f5f5f5;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.githubLink:hover {
+  background: #e8e8e8;
+}
+
+.submitSection {
+  background: var(--background);
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--foreground);
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+
+.submitButton:hover {
+  background: #357abd;
+}
+
+.resultsLink {
+  display: inline-block;
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.resultsLink:hover {
+  color: #357abd;
+}
+
+@media (prefers-color-scheme: dark) {
+  .taskInfo,
+  .submitSection {
+    border-color: #333;
+  }
+
+  .taskDescription {
+    color: #aaa;
+  }
+
+  .linkSection {
+    border-top-color: #333;
+  }
+
+  .githubLink {
+    background: #1a1a1a;
+  }
+
+  .githubLink:hover {
+    background: #2a2a2a;
+  }
+
+  .input {
+    border-color: #333;
+  }
+
+  .input:focus {
+    border-color: #4a90e2;
+  }
+}
