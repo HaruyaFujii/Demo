@@ -19,6 +19,9 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
   const [userType, setUserType] = useState<"student" | "recruiter" | null>(null);
   const [copiedEmails, setCopiedEmails] = useState<Set<string>>(new Set());
   const [showCopiedToast, setShowCopiedToast] = useState(false);
+  const [topN, setTopN] = useState<number>(30);
+  const [selectedStudents, setSelectedStudents] = useState<Set<number>>(new Set());
+  const [statusUpdating, setStatusUpdating] = useState<Set<string>>(new Set());
 
   const copyToClipboard = async (email: string) => {
     try {
@@ -43,6 +46,104 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
       console.error("コピーに失敗しました:", err);
       alert("コピーに失敗しました");
     }
+  };
+
+  // 全選択/全解除
+  const toggleAllStudents = () => {
+    if (selectedStudents.size === submissions.length) {
+      setSelectedStudents(new Set());
+    } else {
+      setSelectedStudents(new Set(submissions.map((_, idx) => idx)));
+    }
+  };
+
+  // 上位N人を選択
+  const selectTopN = () => {
+    const topIndices = new Set<number>();
+    for (let i = 0; i < Math.min(topN, submissions.length); i++) {
+      topIndices.add(i);
+    }
+    setSelectedStudents(topIndices);
+  };
+
+  // 個別選択トグル
+  const toggleStudent = (index: number) => {
+    setSelectedStudents(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
+  // ステータス更新
+  const updateStatus = async (submissionId: string, newStatus: string) => {
+    setStatusUpdating(prev => new Set(prev).add(submissionId));
+    try {
+      const { error } = await supabase
+        .from("submissions")
+        .update({ status: newStatus })
+        .eq("id", submissionId);
+
+      if (error) {
+        console.error("ステータス更新エラー:", error);
+        alert("ステータスの更新に失敗しました");
+      } else {
+        // UIを更新
+        setSubmissions(prev =>
+          prev.map(sub =>
+            sub.id === submissionId ? { ...sub, status: newStatus as any } : sub
+          )
+        );
+      }
+    } catch (err) {
+      console.error("ステータス更新エラー:", err);
+      alert("ステータスの更新に失敗しました");
+    } finally {
+      setStatusUpdating(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(submissionId);
+        return newSet;
+      });
+    }
+  };
+
+  // メール下書き作成
+  const createEmailDraft = () => {
+    const selectedEmails = submissions
+      .filter((_, idx) => selectedStudents.has(idx))
+      .map(sub => sub.user_email)
+      .filter(email => email && email !== "不明")
+      .join(",");
+
+    if (!selectedEmails) {
+      alert("メールアドレスが選択されていません");
+      return;
+    }
+
+    const subject = `【${assignmentTitle}】評価結果のお知らせ`;
+    const body =
+    `お疲れ様です。\n\n` +
+    `課題「${assignmentTitle}」の評価が完了しましたのでお知らせいたします。\n\n` +
+    `合格おめでとうございます！\n` +
+    `何かご質問があればお気軽にお問い合わせください。\n\n` +
+    `よろしくお願いいたします。`;
+
+  const gmailUrl =
+    `https://mail.google.com/mail/?view=cm&fs=1` +
+    `&to=${encodeURIComponent(selectedEmails)}` +
+    `&su=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+
+  if (typeof window !== "undefined") {
+    // 新しいタブで開く
+    window.open(gmailUrl, "_blank");
+    // もしくは現在タブで開きたいなら:
+    // window.location.href = gmailUrl;
+  }
   };
 
   useEffect(() => {
@@ -159,23 +260,77 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
             まだ提出がありません
           </div>
         ) : (
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>順位</th>
-                  {showEmail && <th>メール</th>}
-                  <th>PRリンク</th>
-                  <th>提出日時</th>
-                  <th>総合スコア</th>
-                  <th>CIスコア</th>
-                  <th>AIスコア</th>
-                  <th>詳細</th>
-                </tr>
-              </thead>
+          <>
+            {showEmail && (
+              <div className={styles.controlBar}>
+                <div className={styles.controlLeft}>
+                  <label className={styles.topNLabel}>
+                    Top
+                    <input
+                      type="number"
+                      min="1"
+                      max={submissions.length}
+                      value={topN}
+                      onChange={(e) => setTopN(Math.max(1, parseInt(e.target.value) || 1))}
+                      className={styles.topNInput}
+                    />
+                    人
+                  </label>
+                  <button onClick={selectTopN} className={styles.selectButton}>
+                    上位{topN}人を選択
+                  </button>
+                  <span className={styles.selectedCount}>
+                    {selectedStudents.size}人選択中
+                  </span>
+                </div>
+                <button
+                  onClick={createEmailDraft}
+                  className={styles.emailButton}
+                  disabled={selectedStudents.size === 0}
+                >
+                  ✉ メール送信
+                </button>
+              </div>
+            )}
+            <div className={styles.tableWrapper}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    {showEmail && (
+                      <th className={styles.checkboxCell}>
+                        <input
+                          type="checkbox"
+                          checked={selectedStudents.size === submissions.length && submissions.length > 0}
+                          onChange={toggleAllStudents}
+                          className={styles.checkbox}
+                          title="全選択/全解除"
+                        />
+                      </th>
+                    )}
+                    <th>順位</th>
+                    {showEmail && <th>メール</th>}
+                    <th>PRリンク</th>
+                    <th>提出日時</th>
+                    <th>総合スコア</th>
+                    <th>CIスコア</th>
+                    <th>AIスコア</th>
+                    {showEmail && <th>ステータス</th>}
+                    <th>詳細</th>
+                  </tr>
+                </thead>
               <tbody>
                 {submissions.map((submission, index) => (
                   <tr key={submission.id}>
+                    {showEmail && (
+                      <td className={styles.checkboxCell}>
+                        <input
+                          type="checkbox"
+                          checked={selectedStudents.has(index)}
+                          onChange={() => toggleStudent(index)}
+                          className={styles.checkbox}
+                        />
+                      </td>
+                    )}
                     <td className={styles.rank}>{index + 1}</td>
                     {showEmail && (
                       <td className={styles.submitter}>
@@ -207,6 +362,21 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
                     <td className={styles.score}>{submission.total_score !== undefined ? submission.total_score : "-"}</td>
                     <td className={styles.score}>{submission.ci_score !== undefined ? submission.ci_score : "-"}</td>
                     <td className={styles.score}>{submission.ai_score !== undefined ? submission.ai_score : "-"}</td>
+                    {showEmail && (
+                      <td className={styles.statusCell}>
+                        <select
+                          value={submission.status}
+                          onChange={(e) => updateStatus(submission.id, e.target.value)}
+                          className={styles.statusSelect}
+                          disabled={statusUpdating.has(submission.id)}
+                        >
+                          <option value="submitted">提出済み</option>
+                          <option value="reviewing">レビュー中</option>
+                          <option value="approved">承認済み</option>
+                          <option value="rejected">却下</option>
+                        </select>
+                      </td>
+                    )}
                     <td>
                       <Link 
                         href={`/${id}/results/${submission.id}`}
@@ -220,6 +390,7 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
               </tbody>
             </table>
           </div>
+          </>
         )}
 
         <div className={styles.actions}>

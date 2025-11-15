@@ -45,6 +45,114 @@
   }
 }
 
+/* ==== コントロールバー ==== */
+.controlBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  background: rgba(77, 163, 255, 0.05);
+  border: 1px solid rgba(77, 163, 255, 0.2);
+  border-radius: 12px;
+  gap: 1rem;
+}
+
+.controlLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.topNLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.topNInput {
+  width: 70px;
+  padding: 0.4rem 0.6rem;
+  border: 2px solid rgba(77, 163, 255, 0.3);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.topNInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(77, 163, 255, 0.1);
+}
+
+.selectButton {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #4da3ff, #1e3a8a);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.selectButton:hover {
+  background: linear-gradient(135deg, #357abd, #245a8d);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(77, 163, 255, 0.3);
+}
+
+.selectButton:active {
+  transform: translateY(0);
+}
+
+.selectedCount {
+  padding: 0.4rem 0.8rem;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 6px;
+  color: #0f7a23;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.emailButton {
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.emailButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.emailButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.emailButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 /* ==== ヘッダー ==== */
 .header {
   max-width: 1200px;
@@ -110,6 +218,56 @@
   border-bottom: 2px solid #d0d0d0;
   color: #fff;
   text-align: center;
+}
+
+/* ==== チェックボックス ==== */
+.checkboxCell {
+  width: 50px;
+  text-align: center;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+/* ==== ステータス ==== */
+.statusCell {
+  padding: 0.8rem 0.6rem;
+}
+
+.statusSelect {
+  padding: 0.4rem 0.6rem;
+  border: 2px solid rgba(77, 163, 255, 0.3);
+  border-radius: 6px;
+  background: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 110px;
+}
+
+.statusSelect:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.statusSelect:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(77, 163, 255, 0.1);
+}
+
+.statusSelect:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background: #f5f5f5;
+}
+
+.statusSelect option {
+  padding: 0.5rem;
 }
 
 /* ==== テーブル行 ==== */
@@ -353,5 +511,25 @@ tbody tr:nth-child(3) .rank::after {
 
   .emailButton:hover {
     background: rgba(77, 163, 255, 0.25);
+  }
+
+  .topNLabel {
+    color: #f8fafc;
+  }
+
+  .topNInput,
+  .statusSelect {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: rgba(77, 163, 255, 0.4);
+  }
+
+  .statusSelect:disabled {
+    background: #334155;
+  }
+
+  .controlBar {
+    background: rgba(77, 163, 255, 0.1);
+    border-color: rgba(77, 163, 255, 0.3);
   }
 }
