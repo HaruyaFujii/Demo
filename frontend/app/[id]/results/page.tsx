@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import styles from "./page.module.css";
 
-// サンプルデータ
+// サンプルデータ（消さない）
 const submittedPRs = [
   { id: 1, submitter: "田中太郎", email: "tanaka@example.com", prLink: "https://github.com/example/repo/pull/123", submittedAt: "2025-11-15 11:30", score: 95 },
   { id: 2, submitter: "佐藤花子", email: "sato@example.com", prLink: "https://github.com/example/repo/pull/124", submittedAt: "2025-11-15 11:15", score: 95 },
@@ -21,11 +23,37 @@ submittedPRs.sort((a, b) => {
   return b.score - a.score;
 });
 
-export default function ResultsPage({ userType }: { userType: "student" | "recruiter" }) {
+export default function ResultsPage() {
   const params = useParams();
   const taskId = params.id;
 
-  const showEmail = userType === "recruiter"; // recruiter の場合のみメール表示
+  const [userType, setUserType] = useState<"student" | "recruiter" | null>(null);
+  const showEmail = userType === "recruiter";
+
+  useEffect(() => {
+    const fetchUserType = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from("user_profiles")
+        .select("user_type")
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.error("ユーザータイプ取得エラー:", error);
+      } else {
+        setUserType(data.user_type);
+      }
+    };
+
+    fetchUserType();
+  }, []);
+
+  if (userType === null) {
+    return <div className={styles.container}>読み込み中...</div>;
+  }
 
   return (
     <div className={styles.container}>
@@ -52,7 +80,7 @@ export default function ResultsPage({ userType }: { userType: "student" | "recru
               {submittedPRs.map((pr, index) => (
                 <tr key={pr.id}>
                   <td className={styles.rank}>
-                    {index < 3 ? null : index + 1} {/* 1〜3位はメダルのみ */}
+                    {index < 3 ? null : index + 1}
                   </td>
                   <td className={styles.submitter}>{pr.submitter}</td>
                   {showEmail && <td>{pr.email}</td>}
