@@ -4,15 +4,16 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import styles from "./page.module.css";
 
+// 元のサンプルデータ
 const submittedPRs = [
-  { id: 1, submitter: "田中太郎", prLink: "https://github.com/example/repo/pull/123", submittedAt: "2025-11-15 11:30", score: 95 },
-  { id: 2, submitter: "佐藤花子", prLink: "https://github.com/example/repo/pull/124", submittedAt: "2025-11-15 11:15", score: 95 },
-  { id: 3, submitter: "鈴木一郎", prLink: "https://github.com/example/repo/pull/125", submittedAt: "2025-11-15 13:45", score: 76 },
-  { id: 4, submitter: "高橋美咲", prLink: "https://github.com/example/repo/pull/126", submittedAt: "2025-11-15 14:20", score: 82 },
-  { id: 5, submitter: "伊藤健太", prLink: "https://github.com/example/repo/pull/127", submittedAt: "2025-11-15 15:00", score: 91 },
+  { id: 1, submitter: "田中太郎", email: "tanaka@example.com", prLink: "https://github.com/example/repo/pull/123", submittedAt: "2025-11-15 11:30", score: 95 },
+  { id: 2, submitter: "佐藤花子", email: "sato@example.com", prLink: "https://github.com/example/repo/pull/124", submittedAt: "2025-11-15 11:15", score: 95 },
+  { id: 3, submitter: "鈴木一郎", email: "suzuki@example.com", prLink: "https://github.com/example/repo/pull/125", submittedAt: "2025-11-15 13:45", score: 76 },
+  { id: 4, submitter: "高橋美咲", email: "takahashi@example.com", prLink: "https://github.com/example/repo/pull/126", submittedAt: "2025-11-15 14:20", score: 82 },
+  { id: 5, submitter: "伊藤健太", email: "ito@example.com", prLink: "https://github.com/example/repo/pull/127", submittedAt: "2025-11-15 15:00", score: 91 },
 ];
 
-// スコアの高い順、同点の場合は提出日時が早い人を上位に
+// スコア高い順、同点の場合は提出日時が早い順
 submittedPRs.sort((a, b) => {
   if (b.score === a.score) {
     return new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime();
@@ -21,8 +22,8 @@ submittedPRs.sort((a, b) => {
 });
 
 export default function ResultsPage() {
-  const params = useParams();       
-  const taskId = params.id;         
+  const params = useParams();
+  const taskId = params.id;
 
   return (
     <div className={styles.container}>
@@ -39,6 +40,7 @@ export default function ResultsPage() {
               <tr>
                 <th>順位</th>
                 <th>提出者</th>
+                <th>メール</th>
                 <th>PRリンク</th>
                 <th>提出日時</th>
                 <th>スコア</th>
@@ -51,6 +53,7 @@ export default function ResultsPage() {
                     {index < 3 ? null : index + 1} {/* 1〜3位はメダルのみ */}
                   </td>
                   <td className={styles.submitter}>{pr.submitter}</td>
+                  <td>{pr.email}</td>
                   <td>
                     <a
                       href={pr.prLink}
