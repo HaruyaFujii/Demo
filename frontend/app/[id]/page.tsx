@@ -96,6 +96,12 @@ AI スコア: ${aiScore}点 (重み: 40%)
           user_id: userData.user.id,
           pr_url: prUrl,
           status: "submitted",
+          ci_score: ciScore,
+          ai_score: aiScore,
+          ai_evaluation_details: {
+            scores: aiData.scores,
+            feedback: aiData.feedback,
+          },
         });
 
       if (error) {

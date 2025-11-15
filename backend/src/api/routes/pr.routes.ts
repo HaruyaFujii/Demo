@@ -3,12 +3,14 @@ import type { Request, Response, NextFunction } from 'express';
 import { GithubService } from '../../services/github.service.js';
 import type { CheckPRRequest, EvaluateCodeRequest } from '../../schemas/request.js';
 import type { CheckPRResponse } from '../../schemas/response.js';
-import { GeminiService } from '../../services/gemini.service.js'; // 変更
+import { GeminiService } from '../../services/gemini.service.js';
+import { SupabaseService } from '../../services/supabase.service.js';
 import type { CodeEvaluationResponse } from '../../schemas/response.js';
 
 const router = Router();
 const githubService = new GithubService();
-const geminiService = new GeminiService(); // 変更
+const geminiService = new GeminiService();
+const supabaseService = new SupabaseService();
 
 // PRのCI結果をチェック
 router.post(
@@ -22,6 +24,16 @@ router.post(
       }
       
       const result = await githubService.checkPRCI(prUrl);
+      
+      // データベースにCIスコアを保存
+      const submission = await supabaseService.findSubmissionByPrUrl(prUrl);
+      if (submission) {
+        await supabaseService.updateSubmissionScores({
+          submissionId: submission.id,
+          ciScore: result.ciPassed,
+        });
+      }
+      
       res.json(result);
     } catch (error) {
       next(error);
@@ -50,7 +62,7 @@ router.post(
       }
 
       // Gemini AIでコード評価
-      const evaluation = await geminiService.evaluateCode(diffs); // 変更
+      const evaluation = await geminiService.evaluateCode(diffs);
 
       const { owner, repo, prNumber } = (githubService as any).parsePRUrl(prUrl);
 
@@ -63,6 +75,19 @@ router.post(
         filesAnalyzed,
         linesChanged,
       };
+
+      // データベースにAIスコアと詳細を保存
+      const submission = await supabaseService.findSubmissionByPrUrl(prUrl);
+      if (submission) {
+        await supabaseService.updateSubmissionScores({
+          submissionId: submission.id,
+          aiScore: evaluation.overallScore,
+          aiEvaluationDetails: {
+            scores: evaluation.scores,
+            feedback: evaluation.feedback,
+          },
+        });
+      }
 
       res.json(response);
     } catch (error) {

@@ -24,6 +24,9 @@ CREATE TABLE submissions (
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   pr_url TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'submitted' CHECK (status IN ('submitted', 'reviewing', 'approved', 'rejected')),
+  ci_score INTEGER,
+  ai_score INTEGER,
+  ai_evaluation_details JSONB,
   submitted_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   UNIQUE(assignment_id, user_id)

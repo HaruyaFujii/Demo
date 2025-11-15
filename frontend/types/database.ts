@@ -21,6 +21,22 @@ export interface Submission {
   user_id: string;
   pr_url: string;
   status: 'submitted' | 'reviewing' | 'approved' | 'rejected';
+  ci_score?: number;
+  ai_score?: number;
+  ai_evaluation_details?: {
+    scores: {
+      readability: number;
+      maintainability: number;
+      robustness: number;
+      performance: number;
+      security: number;
+    };
+    feedback: {
+      strengths: string[];
+      improvements: string[];
+      criticalIssues: string[];
+    };
+  };
   submitted_at: string;
   updated_at: string;
 }

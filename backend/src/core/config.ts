@@ -22,4 +22,8 @@ export const config = {
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
   githubToken: process.env.GITHUB_TOKEN!,
   geminiApiKey: process.env.GEMINI_API_KEY!,
+  supabase: {
+    url: process.env.SUPABASE_URL!,
+    serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  },
 };
