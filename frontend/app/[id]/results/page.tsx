@@ -1,18 +1,29 @@
+"use client";
+
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import styles from "./page.module.css";
 
 const submittedPRs = [
-  { id: 1, submitter: "田中太郎", prLink: "https://github.com/example/repo/pull/123", submittedAt: "2025-11-15 10:30", score: 95 },
-  { id: 2, submitter: "佐藤花子", prLink: "https://github.com/example/repo/pull/124", submittedAt: "2025-11-15 11:15", score: 88 },
+  { id: 1, submitter: "田中太郎", prLink: "https://github.com/example/repo/pull/123", submittedAt: "2025-11-15 11:30", score: 95 },
+  { id: 2, submitter: "佐藤花子", prLink: "https://github.com/example/repo/pull/124", submittedAt: "2025-11-15 11:15", score: 95 },
   { id: 3, submitter: "鈴木一郎", prLink: "https://github.com/example/repo/pull/125", submittedAt: "2025-11-15 13:45", score: 76 },
   { id: 4, submitter: "高橋美咲", prLink: "https://github.com/example/repo/pull/126", submittedAt: "2025-11-15 14:20", score: 82 },
   { id: 5, submitter: "伊藤健太", prLink: "https://github.com/example/repo/pull/127", submittedAt: "2025-11-15 15:00", score: 91 },
 ];
 
-// スコアの高い順にソート
-submittedPRs.sort((a, b) => b.score - a.score);
+// スコアの高い順、同点の場合は提出日時が早い人を上位に
+submittedPRs.sort((a, b) => {
+  if (b.score === a.score) {
+    return new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime();
+  }
+  return b.score - a.score;
+});
 
 export default function ResultsPage() {
+  const params = useParams();       
+  const taskId = params.id;         
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -37,7 +48,7 @@ export default function ResultsPage() {
               {submittedPRs.map((pr, index) => (
                 <tr key={pr.id}>
                   <td className={styles.rank}>
-                    {index < 3 ? null : index + 1}
+                    {index < 3 ? null : index + 1} {/* 1〜3位はメダルのみ */}
                   </td>
                   <td className={styles.submitter}>{pr.submitter}</td>
                   <td>
@@ -59,7 +70,11 @@ export default function ResultsPage() {
         </div>
 
         <div className={styles.actions}>
-          <Link href="/1" className={styles.backButton}>課題詳細に戻る</Link>
+          {taskId && (
+            <Link href={`/${taskId}`} className={styles.backButton}>
+              課題詳細に戻る
+            </Link>
+          )}
         </div>
       </main>
     </div>
