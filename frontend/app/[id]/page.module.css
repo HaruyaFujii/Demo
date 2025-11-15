@@ -1,8 +1,10 @@
 .container {
   min-height: 100vh;
   padding: 2rem;
-  background: var(--background);
-  color: var(--foreground);
+  background: linear-gradient(120deg, #f0f4ff, #e8ebf6);
+  color: #1c1c1c;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .header {
@@ -16,17 +18,21 @@
   text-decoration: none;
   font-size: 1rem;
   margin-bottom: 1rem;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .backLink:hover {
   color: #357abd;
+  transform: translateX(-2px);
 }
 
 .title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--foreground);
+  color: #1c1c1c;
+  background: linear-gradient(90deg, #4a90e2, #357abd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .main {
@@ -34,25 +40,34 @@
   margin: 0 auto;
 }
 
-.taskInfo {
-  background: var(--background);
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
+.taskInfo,
+.submitSection {
+  background: #ffffff;
+  border: none;
+  border-radius: 16px;
   padding: 2rem;
   margin-bottom: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.taskInfo:hover,
+.submitSection:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(74, 144, 226, 0.15);
 }
 
 .taskTitle {
   font-size: 1.75rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 1.5rem;
-  color: var(--foreground);
+  color: #1c1c1c;
 }
 
 .taskDescription {
   font-size: 1rem;
   line-height: 1.8;
-  color: #666;
+  color: #555;
   margin-bottom: 2rem;
 }
 
@@ -75,30 +90,26 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: var(--foreground);
+  color: #1c1c1c;
 }
 
 .githubLink {
   display: inline-block;
-  color: #4a90e2;
+  color: #fff;
   text-decoration: none;
   font-family: monospace;
   font-size: 1rem;
   padding: 0.5rem 1rem;
-  background: #f5f5f5;
-  border-radius: 6px;
-  transition: background 0.3s ease;
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 .githubLink:hover {
-  background: #e8e8e8;
-}
-
-.submitSection {
-  background: var(--background);
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 2rem;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, #357abd, #245a8d);
 }
 
 .formGroup {
@@ -110,41 +121,44 @@
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
-  color: var(--foreground);
+  color: #1c1c1c;
 }
 
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 6px;
-  background: var(--background);
-  color: var(--foreground);
-  transition: border-color 0.3s ease;
+  border: none;
+  border-radius: 10px;
+  background: #f5f5f5;
+  color: #1c1c1c;
+  transition: all 0.3s ease;
 }
 
 .input:focus {
   outline: none;
-  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
 }
 
 .submitButton {
   width: 100%;
   padding: 1rem 2rem;
-  background: #4a90e2;
+  background: linear-gradient(135deg, #4a90e2, #357abd);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 1.125rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
   margin-bottom: 1.5rem;
 }
 
 .submitButton:hover {
-  background: #357abd;
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #357abd, #245a8d);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 
 .resultsLink {
@@ -152,40 +166,58 @@
   color: #4a90e2;
   text-decoration: none;
   font-size: 1rem;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .resultsLink:hover {
   color: #357abd;
+  transform: translateX(2px);
 }
 
+/* ダークモード */
 @media (prefers-color-scheme: dark) {
+  .container {
+    background: linear-gradient(120deg, #1e1e1e, #2c2c2c);
+    color: #eee;
+  }
+
   .taskInfo,
   .submitSection {
-    border-color: #333;
+    background: #2c2c2c;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  }
+
+  .taskInfo:hover,
+  .submitSection:hover {
+    box-shadow: 0 12px 28px rgba(74, 144, 226, 0.4);
+  }
+
+  .taskTitle {
+    color: #fff;
   }
 
   .taskDescription {
-    color: #aaa;
+    color: #ccc;
   }
 
-  .linkSection {
-    border-top-color: #333;
+  .label {
+    color: #eee;
   }
 
   .githubLink {
-    background: #1a1a1a;
+    background: linear-gradient(135deg, #4a90e2, #357abd);
   }
 
   .githubLink:hover {
-    background: #2a2a2a;
+    background: linear-gradient(135deg, #357abd, #245a8d);
   }
 
   .input {
-    border-color: #333;
+    background: #1a1a1a;
+    color: #eee;
   }
 
   .input:focus {
-    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.5);
   }
 }
