@@ -1,4 +1,13 @@
 /* ==== ベース ==== */
+:root {
+  --primary: #4da3ff;
+  --secondary: #ffb74d;
+  --background: #f5f7fa;
+  --foreground: #1f2937;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --border: #e0e0e0;
+}
+
 .container {
   min-height: 100vh;
   padding: 2rem;
@@ -11,42 +20,47 @@
 .header {
   max-width: 1200px;
   margin: 0 auto 2rem;
+  text-align: center;
 }
 
 .backLink {
   display: inline-block;
-  color: #4da3ff;
+  color: var(--primary);
   text-decoration: none;
   font-size: 1rem;
   margin-bottom: 1rem;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.2s ease;
 }
 .backLink:hover {
-  opacity: 0.6;
+  opacity: 0.7;
+  transform: translateX(-4px);
 }
 
 .title {
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-size: 2.4rem;
+  font-weight: 800;
   margin-bottom: 0.5rem;
   letter-spacing: 1px;
+  background: linear-gradient(90deg, #4da3ff, #1e3a8a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
   font-size: 1.1rem;
-  color: #888;
+  color: #555;
 }
 
 /* ==== テーブルラッパー ==== */
 .tableWrapper {
-  background: rgba(255,255,255,0.4);
-  backdrop-filter: blur(4px);
-  border: 2px solid #e0e0e0;
-  border-radius: 14px;
+  background: var(--card-bg);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
   overflow: hidden;
   margin: 0 auto 2rem;
-  box-shadow: 0px 4px 14px rgba(0,0,0,0.08);
-  max-width: 900px;
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+  max-width: 100%;
 }
 
 /* ==== テーブル ==== */
@@ -56,37 +70,35 @@
 }
 
 .table thead {
-  background: linear-gradient(90deg, #e2e8f0, #f8fafc);
+  background: linear-gradient(90deg, #4da3ff, #1e3a8a);
 }
 
-/* ヘッダー */
 .table th {
-  padding: 0.8rem 0.6rem;
+  padding: 1rem 0.6rem;
   font-size: 0.85rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
   font-weight: 700;
   border-bottom: 2px solid #d0d0d0;
-  color: #333;
-  white-space: nowrap;
-  text-align: center;   /* ★ 中央揃え */
+  color: #fff;
+  text-align: center;
 }
 
 /* ==== テーブル行 ==== */
 .table tbody tr {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border);
   transition: background 0.25s ease, transform 0.2s ease;
 }
 
 .table tbody tr:hover {
-  background: rgba(77, 163, 255, 0.07);
-  transform: scale(1.005);
+  background: rgba(77, 163, 255, 0.1);
+  transform: scale(1.01);
+  box-shadow: 0px 6px 16px rgba(0,0,0,0.05);
 }
 
 .table td {
   padding: 0.8rem 0.6rem;
-  font-size: 0.96rem;
-  text-align: center;   /* ★ 中央揃え */
+  font-size: 0.95rem;
+  text-align: center;
 }
 
 /* ==== ランキング ==== */
@@ -95,12 +107,10 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-size: 1.1rem;
   font-weight: 700;
   color: #333;
 }
 
-/* メダルアイコン */
 tbody tr:nth-child(1) .rank::after {
   content: "🥇";
 }
@@ -114,28 +124,30 @@ tbody tr:nth-child(3) .rank::after {
 /* ==== 提出者 ==== */
 .submitter {
   font-weight: 600;
+  color: #1e3a8a;
 }
 
 /* ==== PRリンク ==== */
 .prLink {
-  color: #4da3ff;
+  color: var(--primary);
   text-decoration: none;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.85rem;
-  padding: 0.2rem 0.4rem;
+  padding: 0.3rem 0.6rem;
   background: rgba(77, 163, 255, 0.1);
-  border-radius: 6px;
-  transition: all 0.25s ease;
+  border-radius: 8px;
+  transition: all 0.3s ease;
   word-break: break-all;
 }
 .prLink:hover {
   background: rgba(77, 163, 255, 0.2);
   text-decoration: underline;
+  transform: scale(1.05);
 }
 
 /* ==== 日付 ==== */
 .date {
-  color: #777;
+  color: #555;
   font-size: 0.85rem;
 }
 
@@ -143,54 +155,61 @@ tbody tr:nth-child(3) .rank::after {
 .score {
   font-weight: 700;
   color: #0f7a23;
+  position: relative;
 }
 .score::after {
   content: "★";
-  margin-left: 8px;
+  margin-left: 6px;
   color: gold;
   font-size: 0.85rem;
+  position: relative;
+  top: -1px;
 }
 
 /* ==== フッター ==== */
 .actions {
   text-align: center;
+  margin-top: 1.5rem;
 }
 
 .backButton {
   display: inline-block;
-  padding: 0.75rem 2rem;
-  border: 2px solid #4da3ff;
-  border-radius: 8px;
-  color: #4da3ff;
-  text-decoration: none;
+  padding: 0.75rem 2.2rem;
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  color: var(--primary);
   font-weight: 600;
+  text-decoration: none;
   transition: all 0.3s ease;
 }
 .backButton:hover {
-  background: #4da3ff;
+  background: var(--primary);
   color: white;
+  transform: scale(1.05);
 }
 
 /* ==== ダークモード ==== */
 @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f172a;
+    --foreground: #f8fafc;
+    --card-bg: rgba(20,20,30,0.7);
+    --border: #444;
+    --primary: #4da3ff;
+  }
+
   .subtitle,
   .date {
     color: #aaa;
   }
 
-  .tableWrapper {
-    background: rgba(20,20,20,0.6);
-    border-color: #444;
-    box-shadow: 0px 4px 14px rgba(0,0,0,0.4);
-  }
-
   .table thead {
-    background: linear-gradient(90deg, #222, #333);
+    background: linear-gradient(90deg, #4da3ff, #1e3a8a);
   }
 
   .table th {
-    color: #ddd;
-    border-bottom-color: #444;
+    color: #fff;
+    border-bottom-color: #555;
   }
 
   .table tbody tr {
@@ -198,7 +217,7 @@ tbody tr:nth-child(3) .rank::after {
   }
 
   .table tbody tr:hover {
-    background: rgba(77, 163, 255, 0.15);
+    background: rgba(77, 163, 255, 0.2);
   }
 
   .rank,
