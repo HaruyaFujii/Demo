@@ -1,10 +1,13 @@
+/* ==== ベース ==== */
 .container {
   min-height: 100vh;
   padding: 2rem;
   background: var(--background);
   color: var(--foreground);
+  font-family: 'Inter', sans-serif;
 }
 
+/* ==== ヘッダー ==== */
 .header {
   max-width: 1200px;
   margin: 0 auto 2rem;
@@ -12,126 +15,143 @@
 
 .backLink {
   display: inline-block;
-  color: #4a90e2;
+  color: #4da3ff;
   text-decoration: none;
   font-size: 1rem;
   margin-bottom: 1rem;
-  transition: color 0.3s ease;
+  transition: opacity 0.3s ease;
 }
-
 .backLink:hover {
-  color: #357abd;
+  opacity: 0.6;
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: var(--foreground);
+  letter-spacing: 1px;
 }
 
 .subtitle {
-  font-size: 1.125rem;
-  color: #666;
+  font-size: 1.1rem;
+  color: #888;
 }
 
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
+/* ==== テーブルラッパー ==== */
 .tableWrapper {
-  background: var(--background);
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(4px);
   border: 2px solid #e0e0e0;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin: 0 auto 2rem;
+  box-shadow: 0px 4px 14px rgba(0,0,0,0.08);
+  max-width: 900px;
 }
 
+/* ==== テーブル ==== */
 .table {
   width: 100%;
   border-collapse: collapse;
 }
 
 .table thead {
-  background: #f5f5f5;
+  background: linear-gradient(90deg, #e2e8f0, #f8fafc);
 }
 
+/* ヘッダー */
 .table th {
-  padding: 1rem;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.875rem;
+  padding: 0.8rem 0.6rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
-  color: var(--foreground);
-  border-bottom: 2px solid #e0e0e0;
+  letter-spacing: 1px;
+  font-weight: 700;
+  border-bottom: 2px solid #d0d0d0;
+  color: #333;
+  white-space: nowrap;
+  text-align: center;   /* ★ 中央揃え */
 }
 
+/* ==== テーブル行 ==== */
 .table tbody tr {
   border-bottom: 1px solid #e0e0e0;
-  transition: background 0.2s ease;
+  transition: background 0.25s ease, transform 0.2s ease;
 }
 
 .table tbody tr:hover {
-  background: #f9f9f9;
-}
-
-.table tbody tr:last-child {
-  border-bottom: none;
+  background: rgba(77, 163, 255, 0.07);
+  transform: scale(1.005);
 }
 
 .table td {
-  padding: 1rem;
-  font-size: 0.95rem;
-  color: var(--foreground);
+  padding: 0.8rem 0.6rem;
+  font-size: 0.96rem;
+  text-align: center;   /* ★ 中央揃え */
 }
 
+/* ==== ランキング ==== */
+.rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
+}
+
+/* メダルアイコン */
+tbody tr:nth-child(1) .rank::after {
+  content: "🥇";
+}
+tbody tr:nth-child(2) .rank::after {
+  content: "🥈";
+}
+tbody tr:nth-child(3) .rank::after {
+  content: "🥉";
+}
+
+/* ==== 提出者 ==== */
 .submitter {
-  font-weight: 500;
+  font-weight: 600;
 }
 
+/* ==== PRリンク ==== */
 .prLink {
-  color: #4a90e2;
+  color: #4da3ff;
   text-decoration: none;
-  font-family: monospace;
-  font-size: 0.875rem;
-  transition: color 0.3s ease;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.4rem;
+  background: rgba(77, 163, 255, 0.1);
+  border-radius: 6px;
+  transition: all 0.25s ease;
+  word-break: break-all;
 }
-
 .prLink:hover {
-  color: #357abd;
+  background: rgba(77, 163, 255, 0.2);
   text-decoration: underline;
 }
 
+/* ==== 日付 ==== */
 .date {
-  color: #666;
-  font-size: 0.875rem;
+  color: #777;
+  font-size: 0.85rem;
 }
 
-.status {
-  display: inline-block;
-  padding: 0.375rem 0.875rem;
-  border-radius: 20px;
-  font-size: 0.813rem;
-  font-weight: 600;
-  text-align: center;
+/* ==== スコア ==== */
+.score {
+  font-weight: 700;
+  color: #0f7a23;
+}
+.score::after {
+  content: "★";
+  margin-left: 8px;
+  color: gold;
+  font-size: 0.85rem;
 }
 
-.statusSubmitted {
-  background: #e3f2fd;
-  color: #1976d2;
-}
-
-.statusReviewing {
-  background: #fff3e0;
-  color: #f57c00;
-}
-
-.statusApproved {
-  background: #e8f5e9;
-  color: #388e3c;
-}
-
+/* ==== フッター ==== */
 .actions {
   text-align: center;
 }
@@ -139,20 +159,19 @@
 .backButton {
   display: inline-block;
   padding: 0.75rem 2rem;
-  background: var(--background);
-  color: #4a90e2;
+  border: 2px solid #4da3ff;
+  border-radius: 8px;
+  color: #4da3ff;
   text-decoration: none;
-  border: 2px solid #4a90e2;
-  border-radius: 6px;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 0.3s ease;
 }
-
 .backButton:hover {
-  background: #4a90e2;
+  background: #4da3ff;
   color: white;
 }
 
+/* ==== ダークモード ==== */
 @media (prefers-color-scheme: dark) {
   .subtitle,
   .date {
@@ -160,15 +179,18 @@
   }
 
   .tableWrapper {
-    border-color: #333;
+    background: rgba(20,20,20,0.6);
+    border-color: #444;
+    box-shadow: 0px 4px 14px rgba(0,0,0,0.4);
   }
 
   .table thead {
-    background: #1a1a1a;
+    background: linear-gradient(90deg, #222, #333);
   }
 
   .table th {
-    border-bottom-color: #333;
+    color: #ddd;
+    border-bottom-color: #444;
   }
 
   .table tbody tr {
@@ -176,21 +198,12 @@
   }
 
   .table tbody tr:hover {
-    background: #1a1a1a;
+    background: rgba(77, 163, 255, 0.15);
   }
 
-  .statusSubmitted {
-    background: #0d47a1;
-    color: #90caf9;
-  }
-
-  .statusReviewing {
-    background: #e65100;
-    color: #ffcc80;
-  }
-
-  .statusApproved {
-    background: #1b5e20;
-    color: #a5d6a7;
+  .rank,
+  .submitter,
+  .score {
+    color: #fff;
   }
 }

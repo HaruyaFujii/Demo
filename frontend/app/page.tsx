@@ -3,26 +3,31 @@ import styles from "./page.module.css";
 
 const tasks = [
   {
+    number: 1,
     id: "c3369d19-3063-424c-a9d8-36d6cef94c02",
     title: "ユーザー認証機能の実装",
     description: "ログイン・ログアウト機能を実装してください",
   },
   {
+    number: 2,
     id: 2,
     title: "データベース設計",
     description: "ユーザー情報を格納するテーブルを設計してください",
   },
   {
+    number: 3,
     id: 3,
     title: "API エンドポイントの作成",
     description: "RESTful APIのエンドポイントを実装してください",
   },
   {
+    number: 4,
     id: 4,
     title: "フロントエンド UI の改善",
     description: "レスポンシブデザインを適用してください",
   },
   {
+    number: 5,
     id: 5,
     title: "テストコードの追加",
     description: "ユニットテストとE2Eテストを追加してください",
@@ -43,7 +48,7 @@ export default function Home() {
             <div key={task.id} className={styles.taskCard}>
               <div className={styles.taskContent}>
                 <h2 className={styles.taskTitle}>
-                  課題 {task.id}: {task.title}
+                  課題 {task.number}: {task.title}
                 </h2>
                 <p className={styles.taskDescription}>{task.description}</p>
               </div>
