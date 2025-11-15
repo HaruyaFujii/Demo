@@ -14,6 +14,35 @@
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
+  position: relative;
+}
+
+/* ==== トーストメッセージ ==== */
+.toast {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 /* ==== ヘッダー ==== */
@@ -127,6 +156,65 @@ tbody tr:nth-child(3) .rank::after {
   color: #1e3a8a;
 }
 
+.emailCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.emailText {
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+.copyButton {
+  background: rgba(77, 163, 255, 0.1);
+  border: 1px solid rgba(77, 163, 255, 0.3);
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.copyButton:hover {
+  background: rgba(77, 163, 255, 0.2);
+  border-color: rgba(77, 163, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.copyButton:active {
+  transform: scale(0.95);
+}
+
+.emailButton {
+  background: transparent;
+  border: none;
+  color: #1e3a8a;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.emailButton:hover {
+  background: rgba(77, 163, 255, 0.15);
+  transform: scale(1.02);
+}
+
+.emailButton:active {
+  transform: scale(0.98);
+}
+
 /* ==== PRリンク ==== */
 .prLink {
   color: var(--primary);
@@ -224,5 +312,27 @@ tbody tr:nth-child(3) .rank::after {
   .submitter,
   .score {
     color: #fff;
+  }
+
+  .emailText {
+    color: #4da3ff;
+  }
+
+  .copyButton {
+    background: rgba(77, 163, 255, 0.15);
+    border-color: rgba(77, 163, 255, 0.4);
+  }
+
+  .copyButton:hover {
+    background: rgba(77, 163, 255, 0.3);
+    border-color: rgba(77, 163, 255, 0.6);
+  }
+
+  .emailButton {
+    color: #4da3ff;
+  }
+
+  .emailButton:hover {
+    background: rgba(77, 163, 255, 0.25);
   }
 }

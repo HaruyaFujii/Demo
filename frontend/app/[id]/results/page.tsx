@@ -17,6 +17,33 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
   const [loading, setLoading] = useState(true);
   const [assignmentTitle, setAssignmentTitle] = useState("");
   const [userType, setUserType] = useState<"student" | "recruiter" | null>(null);
+  const [copiedEmails, setCopiedEmails] = useState<Set<string>>(new Set());
+  const [showCopiedToast, setShowCopiedToast] = useState(false);
+
+  const copyToClipboard = async (email: string) => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopiedEmails(prev => new Set(prev).add(email));
+      setShowCopiedToast(true);
+      
+      // 2秒後にチェックマークを消す
+      setTimeout(() => {
+        setCopiedEmails(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(email);
+          return newSet;
+        });
+      }, 2000);
+
+      // 2秒後にトーストを消す
+      setTimeout(() => {
+        setShowCopiedToast(false);
+      }, 2000);
+    } catch (err) {
+      console.error("コピーに失敗しました:", err);
+      alert("コピーに失敗しました");
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -104,6 +131,11 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
 
   return (
     <div className={styles.container}>
+      {showCopiedToast && (
+        <div className={styles.toast}>
+          Copied!
+        </div>
+      )}
       <header className={styles.header}>
         <Link href="/" className={styles.backLink}>← ホームに戻る</Link>
         <h1 className={styles.title}>提出済みPR一覧</h1>
@@ -133,7 +165,20 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
                 {submissions.map((submission, index) => (
                   <tr key={submission.id}>
                     <td className={styles.rank}>{index + 1}</td>
-                    {showEmail && <td className={styles.submitter}>{submission.user_email || "不明"}</td>}
+                    {showEmail && (
+                      <td className={styles.submitter}>
+                        <div className={styles.emailCell}>
+                          <span className={styles.emailText}>{submission.user_email || "不明"}</span>
+                          <button
+                            onClick={() => copyToClipboard(submission.user_email || "不明")}
+                            className={styles.copyButton}
+                            title="クリックでコピー"
+                          >
+                            {copiedEmails.has(submission.user_email || "") ? "✓" : "📋"}
+                          </button>
+                        </div>
+                      </td>
+                    )}
                     <td>
                       <a
                         href={submission.pr_url}
