@@ -31,7 +31,7 @@
 
 .taskGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: 1fr; /* 横に1列だけ */
   gap: 1.5rem;
 }
 
