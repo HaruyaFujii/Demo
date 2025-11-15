@@ -8,7 +8,7 @@ import type { Submission } from "@/types/database";
 
 interface SubmissionWithScore extends Submission {
   user_email?: string;
-  score?: number;
+  total_score?: number;
 }
 
 export default function ResultsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -55,18 +55,25 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
       if (error) {
         console.error("提出データの取得エラー:", error);
       } else {
-        const formattedData = (data || []).map((item: any) => ({
-          ...item,
-          user_email: item.user_id, // とりあえずuser_idを表示
-          score: Math.floor(Math.random() * 30) + 70, // TODO: 実際のスコアに置き換え
-        }));
+        const formattedData = (data || []).map((item: any) => {
+          // 総合スコアを計算 (CI:AI = 6:4)
+          const ciScore = item.ci_score || 0;
+          const aiScore = item.ai_score || 0;
+          const totalScore = Math.round(ciScore * 0.6 + aiScore * 0.4);
+          
+          return {
+            ...item,
+            user_email: item.user_id, // とりあえずuser_idを表示
+            total_score: totalScore,
+          };
+        });
 
-        // スコア順にソート
+        // 総合スコア順にソート
         formattedData.sort((a, b) => {
-          if (b.score === a.score) {
+          if (b.total_score === a.total_score) {
             return new Date(a.submitted_at).getTime() - new Date(b.submitted_at).getTime();
           }
-          return (b.score || 0) - (a.score || 0);
+          return (b.total_score || 0) - (a.total_score || 0);
         });
 
         setSubmissions(formattedData);
@@ -109,7 +116,9 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
                   {showEmail && <th>メール</th>}
                   <th>PRリンク</th>
                   <th>提出日時</th>
-                  <th>スコア</th>
+                  <th>総合スコア</th>
+                  <th>CIスコア</th>
+                  <th>AIスコア</th>
                 </tr>
               </thead>
               <tbody>
@@ -130,7 +139,9 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
                     <td className={styles.date}>
                       {new Date(submission.submitted_at).toLocaleString("ja-JP")}
                     </td>
-                    <td className={styles.score}>{submission.score || "-"}</td>
+                    <td className={styles.score}>{submission.total_score !== undefined ? submission.total_score : "-"}</td>
+                    <td className={styles.score}>{submission.ci_score !== undefined ? submission.ci_score : "-"}</td>
+                    <td className={styles.score}>{submission.ai_score !== undefined ? submission.ai_score : "-"}</td>
                   </tr>
                 ))}
               </tbody>
