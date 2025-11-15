@@ -21,4 +21,5 @@ export const config = {
   port: process.env.PORT || 3001,
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
   githubToken: process.env.GITHUB_TOKEN!,
+  geminiApiKey: process.env.GEMINI_API_KEY!,
 };

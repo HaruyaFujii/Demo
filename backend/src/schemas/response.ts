@@ -34,3 +34,23 @@ export interface CheckPRResponse {
   ciTotal: number;
   ciState: 'success' | 'failure' | 'pending';
 };
+
+export interface CodeEvaluationResponse {
+  prUrl: string;
+  prNumber: number;
+  overallScore: number;  // 0-100
+  scores: {
+    readability: number;    // 0-30
+    maintainability: number; // 0-25
+    robustness: number;     // 0-25
+    performance: number;    // 0-10
+    security: number;       // 0-10
+  };
+  feedback: {
+    strengths: string[];
+    improvements: string[];
+    criticalIssues: string[];
+  };
+  filesAnalyzed: number;
+  linesChanged: number;
+}
