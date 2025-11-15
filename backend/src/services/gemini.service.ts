@@ -34,7 +34,7 @@ export class GeminiService {
 
   async evaluateCode(diffs: CodeDiff[]): Promise<EvaluationResult> {
     try {
-      const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
       const prompt = this.buildEvaluationPrompt(diffs);
 
       const result = await model.generateContent(prompt);
