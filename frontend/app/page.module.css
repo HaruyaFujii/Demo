@@ -11,6 +11,7 @@
   max-width: 1200px;
   margin: 0 auto 3rem;
   text-align: center;
+  position: relative;   /* ← 追加 */
 }
 
 .title {
@@ -124,6 +125,20 @@
   .detailButton:hover {
     background: linear-gradient(135deg, #357abd, #245a8d);
   }
+}
 
-  
+.logo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.9;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.logo:hover {
+  opacity: 1;
+  transform: scale(1.05);
 }

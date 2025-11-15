@@ -20,10 +20,13 @@
   max-width: 1200px;
   margin: 0 auto 2rem;
   text-align: center;
+  position: relative;   /* ← 追加 */
 }
 
 .backLink {
-  display: inline-block;
+  display: block;
+  text-align: left;  /* 左寄せ */
+  width: fit-content;
   color: #4a90e2;
   text-decoration: none;
   font-size: 1rem;
@@ -363,4 +366,20 @@
     background: #1a1a1a;
     color: #ccc;
   }
+}
+
+.logo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.9;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.logo:hover {
+  opacity: 1;
+  transform: scale(1.05);
 }

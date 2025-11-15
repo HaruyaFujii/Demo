@@ -92,6 +92,7 @@ export default function SubmissionDetailPage({
         <Link href={`/${id}/results`} className={styles.backLink}>
           ← 一覧に戻る
         </Link>
+        <img src="/Logo.png" alt="Logo" className={styles.logo} />
         <h1 className={styles.title}>PR詳細</h1>
         <p className={styles.subtitle}>{submission.assignment_title}</p>
       </header>

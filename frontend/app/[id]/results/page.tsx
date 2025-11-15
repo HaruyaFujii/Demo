@@ -218,6 +218,7 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
       <header className={styles.header}>
         <Link href="/" className={styles.backLink}>← ホームに戻る</Link>
         <h1 className={styles.title}>提出済みPR一覧</h1>
+        <img src="/Logo.png" alt="Logo" className={styles.logo} />
         <p className={styles.subtitle}>課題: {assignmentTitle}</p>
       </header>
 

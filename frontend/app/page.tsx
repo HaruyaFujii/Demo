@@ -39,6 +39,7 @@ export default function Home() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>課題一覧</h1>
+        <img src="/Logo.png" alt="Logo" className={styles.logo} />
         {/* <p className={styles.subtitle}></p> */}
       </header>
 
