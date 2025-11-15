@@ -1,0 +1,86 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background);
+  padding: 2rem;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.25rem;
+  color: var(--foreground);
+}
+
+.card {
+  background: var(--background);
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 3rem 2.5rem;
+  max-width: 450px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.description {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.githubButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #24292e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.githubButton:hover {
+  background: #1a1e22;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.githubIcon {
+  width: 24px;
+  height: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    border-color: #333;
+  }
+
+  .description {
+    color: #aaa;
+  }
+
+  .githubButton {
+    background: #f0f6fc;
+    color: #24292e;
+  }
+
+  .githubButton:hover {
+    background: #e6eef7;
+  }
+}
