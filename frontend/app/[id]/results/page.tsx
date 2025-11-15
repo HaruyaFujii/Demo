@@ -49,7 +49,11 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
     const fetchData = async () => {
       // ユーザータイプを取得
       const { data: { user } } = await supabase.auth.getUser();
+      let currentUserType: "student" | "recruiter" | null = null;
+      let currentUserId: string | null = null;
+
       if (user) {
+        currentUserId = user.id;
         const { data: profile } = await supabase
           .from("user_profiles")
           .select("user_type")
@@ -57,6 +61,7 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
           .single();
 
         if (profile) {
+          currentUserType = profile.user_type;
           setUserType(profile.user_type);
         }
       }
@@ -72,12 +77,18 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
         setAssignmentTitle(assignment.title);
       }
 
-      // 提出データを取得
-      const { data, error } = await supabase
+      // 提出データを取得 (studentの場合は自分のPRのみ、recruiterの場合は全て)
+      let query = supabase
         .from("submissions")
         .select("*")
-        .eq("assignment_id", id)
-        .order("submitted_at", { ascending: false });
+        .eq("assignment_id", id);
+
+      // studentの場合は自分の提出のみに絞り込み
+      if (currentUserType === "student" && currentUserId) {
+        query = query.eq("user_id", currentUserId);
+      }
+
+      const { data, error } = await query.order("submitted_at", { ascending: false });
 
       if (error) {
         console.error("提出データの取得エラー:", error);
