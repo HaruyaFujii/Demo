@@ -140,9 +140,13 @@ AI スコア: ${aiScore}点 (重み: 40%)
   return (
     <div className={styles.container}>
       <header className={styles.header}>
+
         <Link href="/" className={styles.backLink}>
           ← ホームに戻る
         </Link>
+
+        <img src="/Logo.png" alt="Logo" className={styles.logo} />
+        
         <h1 className={styles.title}>課題詳細</h1>
       </header>
 
