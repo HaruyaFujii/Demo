@@ -1,16 +1,19 @@
-// エントリーポイント
-
-import express from "express";
-import type { Request, Response } from "express"
+// src/app.ts
+import express from 'express';
+import cors from 'cors';
+import { config } from './core/config.js';
+import routes from './api/routes/index.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
+
+app.use(cors({ origin: config.frontendUrl }));
 app.use(express.json());
+app.use(routes);
+app.use(errorHandler);
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello from TypeScript backend!");
+app.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`);
 });
 
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+export default app;
