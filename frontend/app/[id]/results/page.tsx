@@ -21,7 +21,6 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
   const [showCopiedToast, setShowCopiedToast] = useState(false);
   const [topN, setTopN] = useState<number>(30);
   const [selectedStudents, setSelectedStudents] = useState<Set<number>>(new Set());
-  const [statusUpdating, setStatusUpdating] = useState<Set<string>>(new Set());
 
   const copyToClipboard = async (email: string) => {
     try {
@@ -77,38 +76,6 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
       }
       return newSet;
     });
-  };
-
-  // ステータス更新
-  const updateStatus = async (submissionId: string, newStatus: string) => {
-    setStatusUpdating(prev => new Set(prev).add(submissionId));
-    try {
-      const { error } = await supabase
-        .from("submissions")
-        .update({ status: newStatus })
-        .eq("id", submissionId);
-
-      if (error) {
-        console.error("ステータス更新エラー:", error);
-        alert("ステータスの更新に失敗しました");
-      } else {
-        // UIを更新
-        setSubmissions(prev =>
-          prev.map(sub =>
-            sub.id === submissionId ? { ...sub, status: newStatus as any } : sub
-          )
-        );
-      }
-    } catch (err) {
-      console.error("ステータス更新エラー:", err);
-      alert("ステータスの更新に失敗しました");
-    } finally {
-      setStatusUpdating(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(submissionId);
-        return newSet;
-      });
-    }
   };
 
   // メール下書き作成
@@ -314,7 +281,6 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
                     <th>総合スコア</th>
                     <th>CIスコア</th>
                     <th>AIスコア</th>
-                    {showEmail && <th>ステータス</th>}
                     <th>詳細</th>
                   </tr>
                 </thead>
@@ -362,21 +328,6 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
                     <td className={styles.score}>{submission.total_score !== undefined ? submission.total_score : "-"}</td>
                     <td className={styles.score}>{submission.ci_score !== undefined ? submission.ci_score : "-"}</td>
                     <td className={styles.score}>{submission.ai_score !== undefined ? submission.ai_score : "-"}</td>
-                    {showEmail && (
-                      <td className={styles.statusCell}>
-                        <select
-                          value={submission.status}
-                          onChange={(e) => updateStatus(submission.id, e.target.value)}
-                          className={styles.statusSelect}
-                          disabled={statusUpdating.has(submission.id)}
-                        >
-                          <option value="submitted">提出済み</option>
-                          <option value="reviewing">レビュー中</option>
-                          <option value="approved">承認済み</option>
-                          <option value="rejected">却下</option>
-                        </select>
-                      </td>
-                    )}
                     <td>
                       <Link 
                         href={`/${id}/results/${submission.id}`}
